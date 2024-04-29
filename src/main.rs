@@ -1,9 +1,15 @@
 use anyhow::{Context, Result};
+use clap::Parser;
+
+#[derive(Parser)]
+struct Cli {
+    path: std::path::PathBuf,
+}
 
 fn main() -> Result<()> {
-    let path: std::path::PathBuf = std::env::args().nth(1).expect("no input provided").into();
-    let content = std::fs::read_to_string(&path)
-        .with_context(|| format!("could not read file `{}`", path.display()))?;
+    let args = Cli::parse();
+    let content = std::fs::read_to_string(&args.path)
+        .with_context(|| format!("could not read file `{}`", args.path.display()))?;
     println!("{}", content);
     Ok(())
 }
